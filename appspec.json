@@ -11,8 +11,16 @@
   "dependencies": {
     "R": [
       {
-        "name": "lubridate",
-        "version": "1.7.10"
+        "name": "sf"
+      },
+      {
+        "name": "amt"
+      },
+      {
+        "name": "ggplot2"
+      },
+      {
+        "name": "dplyr"
       },
       {
         "name": "move"
@@ -25,39 +33,31 @@
   },
   "language": "eng",
   "keywords": [
-    "example",
-    "template"
+    "step-selection",
+    "habitat-selection",
+    "movement modelling",
+    "animal movement"
   ],
   "people": [
     {
-      "firstName": "Charles",
+      "firstName": "Nilanjan",
       "middleInitials": null,
-      "lastName": "Darwin",
-      "email": "creator@example.com",
-      "roles": [
-        "author",
-        "creator"
-      ],
-      "orcid": null,
-      "affiliation": null,
-      "affiliationRor": null
+      "lastName": "Chatterjee",
+      "email": "nchatter@umn.edu",
+      "roles": ["author", "creator"],
+      "orcid": "0000-0002-7932-0191",
+      "affiliation": "University of Minnesota",
+      "affiliationRor": ""
     }
+		
   ],
   "funding": [
     {
-      "name": "funder name",
-      "comment": "grant for App"
-    }
+	"name": "NASA MoveApps Project"
+	}
   ],
-  "references": [
-    {
-      "type": "IsDescribedBy",
-      "note": "Darwin, C. 1900. The creation. Journal XY. 1-2",
-      "url": "https://anylink.xyz"
-    }
-  ],
-  "documentation": {
-    "url": "https://github.com/yourAccount/my-app/README.md"
+  "documentation" : {
+    "url": "https://github.com/nilanjanchatterjee/Step_selection_Analysis/blob/master/README.md"
   }
 }
 

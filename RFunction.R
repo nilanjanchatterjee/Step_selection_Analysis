@@ -34,11 +34,13 @@ RFunction = function(data, type = "population") {
   
   coef_table <- as.data.frame(summary(ssfreg)$coefficients)
   
-  coef_plot <- ggplot(coef_table)+
+  coef_plot <-  ggplot(coef_table)+
     geom_point(aes(x= row.names(coef_table), y= coef))+
     geom_linerange(aes(x = row.names(coef_table), 
                        ymin = coef - 1.96*`se(coef)`, 
                        ymax = coef +1.96*`se(coef)`))+
     labs(x= "Variables", y= "Coefficient_estimate")+
     theme_bw()
+  
+  ggsave(coef_plot, filename = "coefficient_plot.jpeg", height = 6, width = 9, units = "in", dpi = 300)
 }
