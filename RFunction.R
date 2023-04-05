@@ -30,10 +30,12 @@ RFunction = function(data, type = "population") {
       step_id = paste(id, step_id_, sep = "_")
     )
   
+  ### regression using clogit from the survival package 
   ssfreg <-fit_issf(case_ ~ sl_ + log_sl_ + cos_ta_ + strata(step_id), data = ssfdat)
   
   coef_table <- as.data.frame(summary(ssfreg)$coefficients)
   
+  ### Coefficient plot using ggplot
   coef_plot <-  ggplot(coef_table)+
     geom_point(aes(x= row.names(coef_table), y= coef))+
     geom_linerange(aes(x = row.names(coef_table), 
@@ -42,5 +44,9 @@ RFunction = function(data, type = "population") {
     labs(x= "Variables", y= "Coefficient_estimate")+
     theme_bw()
   
-  ggsave(coef_plot, filename = "coefficient_plot.jpeg", height = 6, width = 9, units = "in", dpi = 300)
+  ## Save the output in csv and jpeg 
+  ggsave(coef_plot, filename = paste0(Sys.getenv(x = "APP_ARTIFACTS_DIR", "/tmp/"),"coefficient_plot.jpeg"), 
+         height = 6, width = 9, units = "in", dpi = 300)
+  write.csv(coef_table, file = paste0(Sys.getenv(x = "APP_ARTIFACTS_DIR", "/tmp/"),"SSF_Coef_table.csv"))
+  return(data)
 }
