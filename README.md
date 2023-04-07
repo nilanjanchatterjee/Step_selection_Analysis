@@ -8,7 +8,7 @@ Github repository: *https://github.com/nilanjanchatterjee/Step_selection_Analysi
 The App models *observed steps* with the *randomly generated steps* using the same distribution estimated from the observed steps. Currently the app accepts user provided raster files 
 
 ## Documentation
-*Enter here a detailed description of your App. What is it intended to be used for. Which steps of analyses are performed and how. Please be explicit about any detail that is important for use and understanding of the App and its outcomes.*
+The app models steps *observed* from collected location fixes with the *generated steps* created by the step-length and turn-angle distribution generated from the observed steps. The regression model fits a conditional logistic regression with the observed steps and respective randomly generated steps. The generated artefact shows the regression output (coefficient, exp(coefficient), standard-error, z-statistic and p value) and the coefficient plot.
 
 ### Input data
 
@@ -29,8 +29,3 @@ SSF_coef_plot.jpeg with the coefficient plot
 
 *Example:* `Radius of resting site` (radius): Defined radius the animal has to stay in for a given duration of time for it to be considered resting site. Unit: `metres`.
 
-
-### Null or error handling
-*Please indicate for each setting as well as the input data which behaviour the App is supposed to show in case of errors or NULL values/input. Please also add notes of possible errors that can happen if settings/parameters are improperly set and any other important information that you find the user should be aware of.*
-
-*Example:* **Setting `radius`:** If no radius AND no duration are given, the input data set is returned with a warning. If no radius is given (NULL), but a duration is defined then a default radius of 1000m = 1km is set. 
