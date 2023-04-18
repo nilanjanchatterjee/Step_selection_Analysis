@@ -12,7 +12,8 @@
       "description": "Specify how you want to perform the step selction analysis. Type population will generate the random steps based on step-length and turn-angle distribution of all the individuals and type individual will generate random steps based on step-length and turn-angle distribution separately for all the individuals",
       "defaultValue": "population",
       "type": "STRING"
-    },
+    }
+    ],
      "providedAppFiles": [
     {
       "settingId": "env_layer",
