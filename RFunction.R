@@ -3,10 +3,11 @@ library(amt)
 library(ggplot2)
 library(dplyr)
 library(sf)
+library(raster)
 
 ## the step-selection function will largely be based on the functions from the amt package 
 
-RFunction = function(data, type = "indv") {
+RFunction = function(data, env_layer = NULL, type = "indv") {
   data_df <-as.data.frame(data)
    
   
@@ -15,13 +16,16 @@ RFunction = function(data, type = "indv") {
       .t = timestamp,      crs = st_crs(4326),
       id = trackId  )
   
+  ### Load the raster data
+  raster <- raster(paste0(getAppFilePath("env_layer"),"raster.tif"))
+  
+  ### prepare data according to the ssf 
   ssfdat <- trck %>% nest(data = -id) %>%
     mutate(data = map(data,
       ~ .x %>%  steps(lonlat=T))) %>%
     unnest(cols = data) %>%
     random_steps() %>%
-    #extract_covariates(dst_edge, where = "end") %>%
-    #extract_covariates(reefclass, where = "both") %>%
+    extract_covariates(raster, where = "end") %>%
     mutate(
       log_sl_ = log(sl_),
       cos_ta_ = cos(ta_),
@@ -36,8 +40,7 @@ RFunction = function(data, type = "indv") {
                         ~ .x %>%  steps(lonlat=T) %>%
       random_steps())) %>%
       unnest(cols = data) %>%
-      #extract_covariates(dst_edge, where = "end") %>%
-      #extract_covariates(reefclass, where = "both") %>%
+      extract_covariates(raster, where = "end") %>%
       mutate(
         log_sl_ = log(sl_),
         cos_ta_ = cos(ta_),
@@ -46,7 +49,7 @@ RFunction = function(data, type = "indv") {
       )
   }
   ### regression using clogit from the survival package 
-  ssfreg <-fit_issf(case_ ~ sl_ + log_sl_ + cos_ta_ + strata(step_id), data = ssfdat)
+  ssfreg <-fit_issf(case_ ~ sl_ + log_sl_ + cos_ta_ + raster + strata(step_id), data = ssfdat)
   
   coef_table <- as.data.frame(summary(ssfreg)$coefficients)
   
@@ -65,3 +68,5 @@ RFunction = function(data, type = "indv") {
   write.csv(coef_table, file = paste0(Sys.getenv(x = "APP_ARTIFACTS_DIR", "/tmp/"),"SSF_Coef_table.csv"))
   return(data)
 }
+
+

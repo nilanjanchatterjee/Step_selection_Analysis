@@ -1,11 +1,22 @@
 {
   "settings": [
     {
-      "id": "year",
-      "name": "The year.",
-      "description": "Insert description for the year setting setting",
-      "defaultValue": 2022,
-      "type": "INTEGER"
+      "id": "env_layer",
+      "name": "Raster files",
+      "description": "You can upload local files for running the resource selection function analysis. Make sure that they overlap with the tracking data set and are in WGS 84 projection! The App requires the following files, named exactly as given: `raster.tif`. Note that fallback raster file of distance to roads in Y2Y region is provided",
+      "type": "LOCAL_FILE"
+    },
+    {
+      "id": "type",
+      "name": "Type of method for step-selection analysis",
+      "description": "Specify how you want to perform the step selction analysis. Type population will generate the random steps based on step-length and turn-angle distribution of all the individuals and type individual will generate random steps based on step-length and turn-angle distribution separately for all the individuals",
+      "defaultValue": "population",
+      "type": "STRING"
+    },
+     "providedAppFiles": [
+    {
+      "settingId": "env_layer",
+      "from": "data/raw/"
     }
   ],
   "dependencies": {
@@ -24,6 +35,9 @@
       },
       {
         "name": "move"
+      },
+      {
+        "name": "raster"
       }
     ]
   },
