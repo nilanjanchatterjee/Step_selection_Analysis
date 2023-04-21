@@ -7,7 +7,7 @@ library(raster)
 
 ## the step-selection function will largely be based on the functions from the amt package 
 
-RFunction = function(data, env_layer = NULL, type = "indv") {
+rFunction = function(data, env_layer = NULL, type = "indv") {
   data_df <-as.data.frame(data)
    
   
