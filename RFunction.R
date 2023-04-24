@@ -4,13 +4,16 @@ library(ggplot2)
 library(dplyr)
 library(sf)
 library(raster)
+library(units)
 
 ## the step-selection function will largely be based on the functions from the amt package 
 
 rFunction = function(data, env_layer = NULL, type = "indv") {
   data_df <-as.data.frame(data)
    
+  units_options(allow_mixed = TRUE)
   
+  ###creating tracks from the telemetry data
   trck <- data_df %>%    
     make_track(., .x = location.long, .y = location.lat,
       .t = timestamp,      crs = st_crs(4326),
@@ -22,7 +25,7 @@ rFunction = function(data, env_layer = NULL, type = "indv") {
   ### prepare data according to the ssf 
   ssfdat <- trck %>% nest(data = -id) %>%
     mutate(data = map(data,
-      ~ .x %>%  steps(lonlat=T))) %>%
+      ~ .x %>%  steps(lonlat = T))) %>%
     unnest(cols = data) %>%
     random_steps() %>%
     extract_covariates(raster, where = "end") %>%

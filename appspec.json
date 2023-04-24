@@ -39,6 +39,9 @@
       },
       {
         "name": "raster"
+      },
+      {
+        "name": "units"
       }
     ]
   },
