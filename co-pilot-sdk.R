@@ -24,6 +24,7 @@ outputFileName = "./data/output/output.rds"
 args <- list() # if your function has no arguments, this line still needs to be active
 # Add all your arguments of your r-function here
 args[["type"]] = "population"
+args[["env-layer"]] = "raster"
 
 ##############################
 ## source, setup & simulate ## leave as is!
