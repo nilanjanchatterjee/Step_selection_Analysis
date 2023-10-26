@@ -30,8 +30,8 @@ rFunction = function(data, env_layer = NULL, type = "indv") {
                id = trackId  )
   
   ### Load the raster data
-  raster <- raster(paste0(getAppFilePath("env_layer"),"raster.tif"))
-  #raster <-raster("./data/raw/raster.tif")
+  #raster <- raster(paste0(getAppFilePath("env_layer"),"raster.tif"))
+  raster <-raster("./data/raw/raster.tif")
   
   ### prepare data according to the ssf 
   ssfdat <- trck %>% nest(data = -id) %>%
@@ -47,6 +47,22 @@ rFunction = function(data, env_layer = NULL, type = "indv") {
       speed = step_len / (as.numeric(dt_, units = "hours")),
       step_id = paste(id, step_id_, sep = "_")) %>%
     filter(is.finite(log_sl_))
+  
+  ### Plot the step-length and turn-angle
+  slplot <- ssfdat %>% dplyr::filter(case_ ==TRUE) %>%
+    dplyr::select(id, step_len) %>%  
+    unnest(cols = step_len) %>% 
+    ggplot(aes(step_len, fill = factor(id))) + 
+    geom_density(alpha = 0.4)+facet_wrap(~id, scales="free")+
+    labs(x= "Step-length (mtr)", fill = "Individual\nId")+
+    theme_bw() +xlim(0,50000)  
+  
+  taplot <- ssfdat %>% dplyr::filter(case_ ==TRUE) %>%
+    dplyr::select(id, ta_) %>%  unnest(cols = ta_) %>% 
+    ggplot(aes(ta_, fill = factor(id))) + 
+    geom_density(alpha = 0.4)+facet_wrap(~id, scales="free")+
+    labs(x= "Turn angle (radian)", fill = "Individual\nId")+
+    theme_bw()  
   
   ### regression using clogit from the survival package 
   ssfreg <-fit_issf(case_ ~ step_len + log_sl_ + cos_ta_ + raster + strata(step_id), data = ssfdat)
@@ -109,7 +125,12 @@ rFunction = function(data, env_layer = NULL, type = "indv") {
   
   ## Save the output in csv and jpeg 
   ggsave(coef_plot, filename = paste0(Sys.getenv(x = "APP_ARTIFACTS_DIR", "/tmp/"),"SSF_coef_plot.jpeg"), 
-         height = 6, width = 9, units = "in", dpi = 300)
+         height = 6, width = 9, units = "in", dpi = 200)
+  ggsave(slplot, filename = paste0(Sys.getenv(x = "APP_ARTIFACTS_DIR", "/tmp/"),"Step_length_distribution.jpeg"), 
+         height = 6, width = 9, units = "in", dpi = 200)
+  ggsave(taplot, filename = paste0(Sys.getenv(x = "APP_ARTIFACTS_DIR", "/tmp/"),"Turn_angle_distribution.jpeg"), 
+         height = 6, width = 9, units = "in", dpi = 200)
+  
   write.csv(coefssf, file = paste0(Sys.getenv(x = "APP_ARTIFACTS_DIR", "/tmp/"),"SSF_Coef_table.csv"))
   return(data)
 }
