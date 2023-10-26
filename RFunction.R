@@ -30,8 +30,8 @@ rFunction = function(data, env_layer = NULL, type = "indv") {
                id = trackId  )
   
   ### Load the raster data
-  #raster <- raster(paste0(getAppFilePath("env_layer"),"raster.tif"))
-  raster <-raster("./data/raw/raster.tif")
+  raster <- raster(paste0(getAppFilePath("env_layer"),"raster.tif"))
+  #raster <-raster("./data/raw/raster.tif")
   
   ### prepare data according to the ssf 
   ssfdat <- trck %>% nest(data = -id) %>%
