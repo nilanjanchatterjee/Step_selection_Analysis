@@ -1,4 +1,4 @@
-library('move')
+library('move2')
 library(amt)
 library(ggplot2)
 library(dplyr)
@@ -6,7 +6,7 @@ library(sf)
 library(raster)
 library(units)
 
-## the step-selection function will largely be based on the functions from the amt package 
+## the step-selection function will largely be based on the functions from the amt and survival package 
 
 rFunction = function(data, env_layer = NULL, type = "indv") {
   
@@ -19,6 +19,9 @@ rFunction = function(data, env_layer = NULL, type = "indv") {
     d = R * 2 * asin(pmin(1, sqrt(a))) 
     return(d)
   }
+  data <- data |> mutate(location.long = sf::st_coordinates(data)[,1],
+                         location.lat = sf::st_coordinates(data)[,2],
+                         trackId = mt_track_id(data))
   data_df <-as.data.frame(data)
   
   units_options(allow_mixed = TRUE)
@@ -30,7 +33,7 @@ rFunction = function(data, env_layer = NULL, type = "indv") {
                id = trackId  )
   
   ### Load the raster data
-  raster <- raster(paste0(getAppFilePath("env_layer"),"raster.tif"))
+  raster <- rast(paste0(getAppFilePath("env_layer"),"raster.tif"))
   #raster <-raster("./data/raw/raster.tif")
   
   ### prepare data according to the ssf 
