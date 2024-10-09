@@ -3,7 +3,7 @@
 ##################
 ## Provided testing datasets in `./data/raw`: 
 ## for own data: file saved as a .rds containing a object of class MoveStack
-inputFileName = "./data/raw/input_work_hebb.rds" 
+inputFileName = "./data/raw/yahatinda1.rds" 
 
 ## optionally change the output file name
 unlink("./data/output/", recursive = TRUE) # delete "output" folder if it exists, to have a clean start for every run
@@ -37,7 +37,8 @@ Sys.setenv(
     SOURCE_FILE = inputFileName, 
     OUTPUT_FILE = outputFileName, 
     ERROR_FILE="./data/output/error.log", 
-    APP_ARTIFACTS_DIR ="./data/output/"
+    APP_ARTIFACTS_DIR ="./data/output/",
+    LOCAL_APP_FILES_DIR = "./data/local_app_files"
 )
 
 # simulate running your app on MoveApps

@@ -35,10 +35,10 @@
         "name": "dplyr"
       },
       {
-        "name": "move"
+        "name": "move2"
       },
       {
-        "name": "raster"
+        "name": "terra"
       },
       {
         "name": "units"
