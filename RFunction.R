@@ -33,7 +33,7 @@ rFunction = function(data, env_layer = NULL, type = "indv") {
                id = trackId  )
   
   ### Load the raster data
-  raster <- rast(paste0(getAppFilePath("raster_file"),"raster.tif"))
+  raster <- rast(paste0(getAuxiliaryFilePath("raster_file")))
   names(raster) <- "raster"
     #rast(paste0(getAppFilePath("env_layer"),"raster.tif"))
   #raster <-raster("./data/raw/raster.tif")
@@ -41,13 +41,13 @@ rFunction = function(data, env_layer = NULL, type = "indv") {
   ### prepare data according to the ssf 
   ssfdat <- trck %>% nest(data = -id) %>%
     mutate(data = map(data,
-                      ~ .x %>%  steps(lonlat = TRUE))) %>%
+                      ~ .x %>%  steps())) %>%
     unnest(cols = data) %>%
     random_steps() %>%
     extract_covariates(raster, where = "end") %>%
     mutate(
       step_len = hav.dist(x1_, y1_, x2_, y2_),
-      log_sl_ = log(sl_),
+      log_sl_ = log(step_len),
       cos_ta_ = cos(ta_),
       speed = sl_ / (as.numeric(dt_, units = "hours")),
       step_id = paste(id, step_id_, sep = "_")) %>%
@@ -55,9 +55,9 @@ rFunction = function(data, env_layer = NULL, type = "indv") {
   
   ### Plot the step-length and turn-angle
   slplot <- ssfdat %>% dplyr::filter(case_ ==TRUE) %>%
-    dplyr::select(id, sl_) %>%  
-    unnest(cols = sl_) %>% 
-    ggplot(aes(sl_, fill = factor(id))) + 
+    dplyr::select(id, step_len) %>%  
+    unnest(cols = step_len) %>% 
+    ggplot(aes(step_len, fill = factor(id))) + 
     geom_density(alpha = 0.4)+facet_wrap(~id, scales="free")+
     labs(x= "Step-length (mtr)", fill = "Individual\nId")+
     theme_bw() +xlim(0,50000)  
@@ -70,7 +70,7 @@ rFunction = function(data, env_layer = NULL, type = "indv") {
     theme_bw()  
   
   ### regression using clogit from the survival package 
-  ssfreg <-fit_issf(case_ ~ sl_ + log_sl_ + cos_ta_ + raster + strata(step_id), data = ssfdat)
+  ssfreg <-fit_issf(case_ ~ step_len + log_sl_ + cos_ta_ + raster + strata(step_id), data = ssfdat)
   
   coefssf <- cbind(var= rownames(summary(ssfreg)$coefficients),
                    as.data.frame(summary(ssfreg)$coefficients))
@@ -94,7 +94,7 @@ rFunction = function(data, env_layer = NULL, type = "indv") {
       extract_covariates(raster, where = "end") %>%
         mutate(
         step_len = hav.dist(x1_, y1_, x2_, y2_),
-        log_sl_ = log(sl_),
+        log_sl_ = log(step_len),
         cos_ta_ = cos(ta_),
         speed = sl_ / (as.numeric(dt_, units = "hours")),
         step_id = paste(id, step_id_, sep = "_")
@@ -105,7 +105,7 @@ rFunction = function(data, env_layer = NULL, type = "indv") {
     ssffits <- ssfdat %>% nest(data=-id) %>% 
       mutate(
         mod = map(data, 
-                  function(x) (try(fit_issf(case_ ~ (sl_) + log_sl_ + cos_ta_ + raster + strata(step_id), data = x)))))
+                  function(x) (try(fit_issf(case_ ~ (step_len) + log_sl_ + cos_ta_ + raster + strata(step_id), data = x)))))
     
     ### Coefficient 
     coefssf<-NULL
