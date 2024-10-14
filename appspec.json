@@ -17,7 +17,7 @@
      "providedAppFiles": [
     {
       "settingId": "env_layer",
-      "from": "data/raw/"
+      "from": "data/auxiliary/user-files/provided-app-files/raster_file/raster.tif"
     }
   ],
   "dependencies": {
