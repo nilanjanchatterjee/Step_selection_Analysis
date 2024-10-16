@@ -8,7 +8,7 @@ library(units)
 
 ## the step-selection function will largely be based on the functions from the amt and survival package 
 
-rFunction = function(data, env_layer = NULL, type = "indv") {
+rFunction = function(data, type = "indv", ...) {
   
   ##a small function to calculate the distance between lat-long points in meters
   hav.dist <- function(x1, y1, x2, y2) {
@@ -33,7 +33,7 @@ rFunction = function(data, env_layer = NULL, type = "indv") {
                id = trackId  )
   
   ### Load the raster data
-  raster <- rast(paste0(getAuxiliaryFilePath("raster_file")))
+  raster <- rast(paste0(getAuxiliaryFilePath("env_layer")))
   names(raster) <- "raster"
     #rast(paste0(getAppFilePath("env_layer"),"raster.tif"))
   #raster <-raster("./data/raw/raster.tif")
@@ -59,15 +59,24 @@ rFunction = function(data, env_layer = NULL, type = "indv") {
     unnest(cols = step_len) %>% 
     ggplot(aes(step_len, fill = factor(id))) + 
     geom_density(alpha = 0.4)+facet_wrap(~id, scales="free")+
-    labs(x= "Step-length (mtr)", fill = "Individual\nId")+
-    theme_bw() +xlim(0,50000)  
+    labs(x= "Step-length (mtr)", fill = "Individual Id")+
+    theme_bw() +xlim(0,50000)+
+    theme(legend.text = element_text(size = 4),
+          legend.key.size=unit(.3,"cm"))+
+    guides(fill=guide_legend(ncol =1))
+    
+  
   
   taplot <- ssfdat %>% dplyr::filter(case_ ==TRUE) %>%
     dplyr::select(id, ta_) %>%  unnest(cols = ta_) %>% 
     ggplot(aes(ta_, fill = factor(id))) + 
     geom_density(alpha = 0.4)+facet_wrap(~id, scales="free")+
-    labs(x= "Turn angle (radian)", fill = "Individual\nId")+
-    theme_bw()  
+    labs(x= "Turn angle (radian)", fill = "Individual Id")+
+    theme_bw()+
+    theme(legend.text = element_text(size = 4),
+          legend.key.size=unit(.3,"cm"))+
+    guides(fill=guide_legend(ncol =1))
+  
   
   ### regression using clogit from the survival package 
   ssfreg <-fit_issf(case_ ~ step_len + log_sl_ + cos_ta_ + raster + strata(step_id), data = ssfdat)
@@ -125,7 +134,10 @@ rFunction = function(data, env_layer = NULL, type = "indv") {
                          ymax = coef +1.96*`se(coef)`),
                      position = position_dodge(width = 0.15))+
       labs(x= "Variables", y= "Coefficient_estimate", col ="Individual_id")+
-      theme_bw()
+      theme_bw()+
+      theme(legend.text = element_text(size = 4),
+            legend.key.size=unit(.3,"cm"))+
+      guides(color=guide_legend(ncol =1))
    }
   
   ## Save the output in csv and jpeg 

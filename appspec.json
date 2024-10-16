@@ -3,21 +3,29 @@
     {
       "id": "env_layer",
       "name": "Raster files",
-      "description": "You can upload local files for running the resource selection function analysis. Make sure that they overlap with the tracking data set and are in WGS 84 projection! The App requires the following files, named exactly as given: `raster.tif`. Note that fallback raster file of distance to roads in Y2Y region is provided",
-      "type": "LOCAL_FILE"
+      "description": "You can upload your own raster file for running the resource selection function analysis. Make sure that they overlap with the tracking data set and are in WGS 84 projection! You can only upload one file, but this one .tif file can contain multiple layers. Note that if you do not upload a file, a fallback raster file of distance to roads in Y2Y region is provided.",
+      "type": "USER_FILE"
     },
     {
       "id": "type",
       "name": "Type of method for step-selection analysis",
-      "description": "Specify how you want to perform the step selction analysis. Type population will generate the random steps based on step-length and turn-angle distribution of all the individuals and type individual will generate random steps based on step-length and turn-angle distribution separately for all the individuals",
+      "description": "Specify how you want to perform the step selction analysis. Type 'population' will generate the random steps based on step-length and turn-angle distribution of all the individuals and type 'individual' will generate random steps based on step-length and turn-angle distribution separately for all the individuals.",
       "defaultValue": "population",
-      "type": "STRING"
+      "type": "RADIOBUTTONS",
+  "options": [{
+      "value": "population",
+      "displayText": "Population"
+    },
+    {
+      "value": "indv",
+      "displayText": "Individual"
+    }]
     }
     ],
      "providedAppFiles": [
     {
       "settingId": "env_layer",
-      "from": "data/auxiliary/user-files/provided-app-files/raster_file/raster.tif"
+      "from": "data/auxiliary/user-files/provided-app-files/raster_file/"
     }
   ],
   "dependencies": {
