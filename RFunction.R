@@ -8,7 +8,7 @@ library(units)
 
 ## the step-selection function will largely be based on the functions from the amt and survival package 
 
-rFunction = function(data, env_layer = NULL, type = "indv") {
+rFunction = function(data, type = "indv", ...) {
   
   ##a small function to calculate the distance between lat-long points in meters
   hav.dist <- function(x1, y1, x2, y2) {
@@ -33,7 +33,7 @@ rFunction = function(data, env_layer = NULL, type = "indv") {
                id = trackId  )
   
   ### Load the raster data
-  raster <- rast(paste0(getAuxiliaryFilePath("raster_file")))
+  raster <- rast(paste0(getAuxiliaryFilePath("env_layer")))
   names(raster) <- "raster"
     #rast(paste0(getAppFilePath("env_layer"),"raster.tif"))
   #raster <-raster("./data/raw/raster.tif")
